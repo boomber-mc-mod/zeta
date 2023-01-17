@@ -1,9 +1,11 @@
 package me.boomber.zetalib.client
 
 import net.minecraft.client.font.TextRenderer
+import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
+import net.minecraft.text.Text
 import net.minecraft.util.math.Vec3f
 import net.minecraft.util.math.Vector4f
 import net.silkmc.silk.core.text.LiteralTextBuilder
@@ -106,15 +108,30 @@ fun List<Float>.sumForEach(f: (Float, Float) -> Unit) {
 fun TextRenderer.draw(
     stack: MatrixStack,
     content: String,
+    width: Int,
     x: Float = 0f,
     y: Float = 0f,
     alignment: Alignment = Alignment.CENTER,
     shadow: Boolean = true,
     color: Int = 0xFFFFFF,
-    builder: LiteralTextBuilder.() -> Unit
+    builder: LiteralTextBuilder.() -> Unit = {}
+) = draw(stack, literalText(content, builder), width, x, y, alignment, shadow, color)
+
+fun TextRenderer.draw(
+    stack: MatrixStack,
+    text: Text,
+    width: Int = getWidth(text),
+    x: Float = 0f,
+    y: Float = 0f,
+    alignment: Alignment = Alignment.CENTER,
+    shadow: Boolean = true,
+    color: Int = 0xFFFFFF,
+    debugBackground: Boolean = false,
 ) {
-    val text = literalText(content, builder)
-    val offset = alignment.offset * getWidth(text)
+    val offset = (width - getWidth(text)) * alignment.offset
+
+    if (debugBackground)
+        DrawableHelper.fill(stack, x.toInt(), y.toInt(), x.toInt() + width, y.toInt() + fontHeight, 0x80000000.toInt())
 
     if (shadow)
         drawWithShadow(stack, text, x + offset, y, color)
@@ -123,8 +140,8 @@ fun TextRenderer.draw(
 }
 
 enum class Alignment(val offset: Float) {
-    LEFT(-1.0f),
-    CENTER(0.0f),
+    LEFT(0.0f),
+    CENTER(0.5f),
     RIGHT(1.0f);
 }
 
