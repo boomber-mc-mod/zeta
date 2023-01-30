@@ -60,7 +60,7 @@ class Vec3iSerializer : SurrogateSerializer<Vec3i, Vec3iSurrogate>() {
 
 @Serializable
 @SerialName("ItemStack")
-data class ItemStackSurrogate(val id: KIdentifier, val count: Int, val tag: KNbtCompound?)
+data class ItemStackSurrogate(val id: KIdentifier, val count: Int = 1, val tag: KNbtCompound? = null)
 
 class ItemStackSerializer : SurrogateSerializer<ItemStack, ItemStackSurrogate>() {
     override val delegate: KSerializer<ItemStackSurrogate> = ItemStackSurrogate.serializer()
