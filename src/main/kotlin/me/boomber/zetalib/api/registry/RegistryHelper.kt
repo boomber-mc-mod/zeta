@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
-fun <T : Entity> register(id: Identifier, entityType: EntityType<T>): EntityType<T> =
+fun <T : Entity> register(id: Identifier, entityType: EntityType<T>): EntityType<out T> =
     Registry.register(Registry.ENTITY_TYPE, id, entityType)
 
 fun <T : Block> register(id: Identifier, block: T): T =
@@ -30,7 +30,7 @@ fun <T : Block> register(id: Identifier, block: T): T =
 fun <T : Item> register(id: Identifier, item: T): T =
     Registry.register(Registry.ITEM, id, item)
 
-fun <T : BlockEntity> register(id: Identifier, blockEntity: BlockEntityType<T>): BlockEntityType<T> =
+fun <T : BlockEntity> register(id: Identifier, blockEntity: BlockEntityType<T>): BlockEntityType<out T> =
     Registry.register(Registry.BLOCK_ENTITY_TYPE, id, blockEntity)
 
 fun register(id: Identifier, status: StatusEffect): StatusEffect =
@@ -39,16 +39,16 @@ fun register(id: Identifier, status: StatusEffect): StatusEffect =
 fun register(id: Identifier, enchantment: Enchantment): Enchantment =
     Registry.register(Registry.ENCHANTMENT, id, enchantment)
 
-fun <T : LivingEntity> register(type: EntityType<T>, attribute: DefaultAttributeContainer.Builder) =
+fun <T : LivingEntity> register(type: EntityType<out T>, attribute: DefaultAttributeContainer.Builder) =
     FabricDefaultAttributeRegistry.register(type, attribute)
 
-fun <T : Entity> register(type: EntityType<T>, renderer: EntityRendererFactory<T>) =
+fun <T : Entity> register(type: EntityType<out T>, renderer: EntityRendererFactory<T>) =
     EntityRendererRegistry.register(type, renderer)
-fun <T : BlockEntity> register(type: BlockEntityType<T>, renderer: BlockEntityRendererFactory<T>) =
+fun <T : BlockEntity> register(type: BlockEntityType<out T>, renderer: BlockEntityRendererFactory<T>) =
     BlockEntityRendererRegistry.register(type, renderer)
 
 fun <T : Entity> entityType(
-    factory: (EntityType<T>, World) -> T,
+    factory: (EntityType<out T>, World) -> T,
     spawnGroup: SpawnGroup,
     builder: FabricEntityTypeBuilder<T>.() -> Unit
 ): EntityType<T> =
@@ -60,5 +60,5 @@ fun <T : BlockEntity> blockEntityType(
 ): BlockEntityType<T> =
     FabricBlockEntityTypeBuilder.create(factory, *blocks).apply(builder).build()
 
-fun FabricEntityTypeBuilder<out Entity>.dimensions(width: Float, height: Float): FabricEntityTypeBuilder<out Entity> =
-    dimensions(EntityDimensions.fixed(width, height))
+fun FabricEntityTypeBuilder<out Entity>.dimensions(width: Float, height: Float, fixed: Boolean = true): FabricEntityTypeBuilder<out Entity> =
+    dimensions(EntityDimensions(width, height, fixed))
