@@ -13,7 +13,7 @@ import net.minecraft.text.Text
 import net.silkmc.silk.core.text.literalText
 
 class ItemBoxScreen(items: List<ItemStack>) : NamedScreenHandlerFactory {
-    private val rows = clamp(items.size / 9, 1, 6)
+    private val rows = clamp(items.size / 9 + 1, 1, 6)
     private val inventory = SimpleInventory(rows * 9).apply {
         items.take(rows * 9).forEachIndexed { index, itemStack ->
             setStack(index, itemStack)

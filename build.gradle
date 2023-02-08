@@ -28,11 +28,6 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${project.kotlinx_serialization_version}"
 
-    modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-scoreboard:${project.cardinal_components_version}"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${project.cardinal_components_version}"
-
     modImplementation "net.silkmc:silk-core:${project.silk_version}"
     modImplementation "net.silkmc:silk-commands:${project.silk_version}"
     modImplementation "net.silkmc:silk-game:${project.silk_version}"

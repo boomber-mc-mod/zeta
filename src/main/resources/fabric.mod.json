@@ -23,19 +23,12 @@
         "adapter": "kotlin",
         "value": "me.boomber.zetalib.Zeta"
       }
-    ],
-    "cardinal-components": [
-      {
-        "adapter": "kotlin",
-        "value": "me.boomber.zetalib.components.ZetaComponents"
-      }
     ]
   },
   "mixins": [
     "zeta-lib.mixins.json"
   ],
   "depends": {
-    "cardinal-components-base": "*",
     "silk-core": "*",
     "fabric-language-kotlin": "*",
     "fabricloader": ">=0.14.9",
