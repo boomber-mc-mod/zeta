@@ -3,8 +3,10 @@ package me.boomber.zetalib.api.command
 import me.boomber.zetalib.api.math.clamp
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NbtList
 import net.minecraft.screen.GenericContainerScreenHandler
 import net.minecraft.screen.NamedScreenHandlerFactory
 import net.minecraft.screen.ScreenHandler
@@ -12,13 +14,8 @@ import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.text.Text
 import net.silkmc.silk.core.text.literalText
 
-class ItemBoxScreen(items: List<ItemStack>) : NamedScreenHandlerFactory {
-    private val rows = clamp(items.size / 9 + 1, 1, 6)
-    private val inventory = SimpleInventory(rows * 9).apply {
-        items.take(rows * 9).forEachIndexed { index, itemStack ->
-            setStack(index, itemStack)
-        }
-    }
+open class ItemBoxScreen(open val inventory: Inventory, open val name: Text = NAME) : NamedScreenHandlerFactory {
+    private val rows get() = alignRows(inventory.size())
 
     private val type = when (rows) {
         1 -> ScreenHandlerType.GENERIC_9X1
@@ -34,7 +31,27 @@ class ItemBoxScreen(items: List<ItemStack>) : NamedScreenHandlerFactory {
         return GenericContainerScreenHandler(type, syncId, playerInventory, inventory, rows)
     }
 
-    override fun getDisplayName(): Text {
-        return literalText("Item Box")
+    override fun getDisplayName(): Text = name
+
+    companion object {
+        val NAME = literalText("Item Box")
+
+        fun alignRows(size: Int) =
+            clamp(size / 9, 1, 6)
+
+        fun inventory(items: List<ItemStack>) =
+            SimpleInventory(alignRows(items.size) * 9).apply {
+                items.forEachIndexed { index, itemStack -> setStack(index, itemStack) }
+            }
+
+        fun inventory(items: Map<Int, ItemStack>) =
+            SimpleInventory(alignRows(items.keys.max())).apply {
+                items.forEach { (index, itemStack) -> setStack(index, itemStack) }
+            }
+
+        fun inventory(nbt: NbtList, size: Int = 27) =
+            SimpleInventory(size).apply {
+                readNbtList(nbt)
+            }
     }
 }

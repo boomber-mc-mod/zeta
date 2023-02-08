@@ -2,9 +2,11 @@ package me.boomber.zetalib.api.command
 
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.command.CommandSource
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.server.command.ServerCommandSource
+import net.minecraft.text.Text
 import net.silkmc.silk.commands.CommandBuilder
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
@@ -25,10 +27,15 @@ fun <Source : CommandSource> CommandBuilder<Source, *, *>.runsSuspend(
     }
 }
 
-fun ServerCommandSource.showItemBox(items: List<ItemStack>) {
-    val screen = ItemBoxScreen(items.toList())
+fun ServerCommandSource.showItemBox(inventory: Inventory, name: Text = ItemBoxScreen.NAME) {
+    val screen = ItemBoxScreen(inventory, name)
     this.player?.openHandledScreen(screen)
 }
 
-fun ServerCommandSource.showItemBox(vararg items: Item) =
-    showItemBox(items.map { it.defaultStack })
+fun ServerCommandSource.showItemBox(items: List<ItemStack>, name: Text = ItemBoxScreen.NAME) {
+    val inventory = ItemBoxScreen.inventory(items)
+    showItemBox(inventory, name)
+}
+
+fun ServerCommandSource.showItemBox(vararg items: Item, name: Text = ItemBoxScreen.NAME) =
+    showItemBox(items.map { it.defaultStack }, name)
