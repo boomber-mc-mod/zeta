@@ -41,5 +41,7 @@ typealias KNbtLong = @Serializable(with = KNbtLongSerializer::class) NbtLong
 typealias KNbtFloat = @Serializable(with = KNbtFloatSerializer::class) NbtFloat
 typealias KNbtDouble = @Serializable(with = KNbtDoubleSerializer::class) NbtDouble
 typealias KNbtEnd = @Serializable(with = KNbtEndSerializer::class) NbtEnd
+typealias NbtCompoundString = @Serializable(with = NbtAsStringSerializer::class) NbtCompound
 
 typealias KItemStack = @Serializable(with = ItemStackSerializer::class) ItemStack
+typealias ItemStackAsString = @Serializable(with = ItemStackAsStringSerializer::class) ItemStack

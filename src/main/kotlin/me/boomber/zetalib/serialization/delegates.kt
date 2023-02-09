@@ -1,7 +1,6 @@
 package me.boomber.zetalib.serialization
 
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
@@ -10,7 +9,6 @@ import net.minecraft.util.math.Vec3i
 import net.minecraft.util.registry.Registry
 
 @Serializable
-@SerialName("Vec3d")
 data class Vec3dSurrogate(val x: Double, val y: Double, val z: Double)
 
 class Vec3dSerializer : SurrogateSerializer<Vec3d, Vec3dSurrogate>() {
@@ -27,7 +25,6 @@ class Vec3dSerializer : SurrogateSerializer<Vec3d, Vec3dSurrogate>() {
 }
 
 @Serializable
-@SerialName("BlockPos")
 data class BlockPosSurrogate(val x: Int, val y: Int, val z: Int)
 
 class BlockPosSerializer : SurrogateSerializer<BlockPos, BlockPosSurrogate>() {
@@ -43,7 +40,6 @@ class BlockPosSerializer : SurrogateSerializer<BlockPos, BlockPosSurrogate>() {
 }
 
 @Serializable
-@SerialName("Vec3i")
 data class Vec3iSurrogate(val x: Int, val y: Int, val z: Int)
 
 class Vec3iSerializer : SurrogateSerializer<Vec3i, Vec3iSurrogate>() {
@@ -59,7 +55,6 @@ class Vec3iSerializer : SurrogateSerializer<Vec3i, Vec3iSurrogate>() {
 }
 
 @Serializable
-@SerialName("ItemStack")
 data class ItemStackSurrogate(val id: KIdentifier, val count: Int = 1, val tag: KNbtCompound? = null)
 
 class ItemStackSerializer : SurrogateSerializer<ItemStack, ItemStackSurrogate>() {
@@ -73,5 +68,22 @@ class ItemStackSerializer : SurrogateSerializer<ItemStack, ItemStackSurrogate>()
 
     override fun encode(value: ItemStack): ItemStackSurrogate {
         return ItemStackSurrogate(Registry.ITEM.getId(value.item), value.count, value.nbt)
+    }
+}
+
+@Serializable
+data class ItemStackAsStringSurrogate(val id: KIdentifier, val count: Int = 1, val tag: NbtCompoundString? = null)
+
+class ItemStackAsStringSerializer : SurrogateSerializer<ItemStack, ItemStackAsStringSurrogate>() {
+    override val delegate: KSerializer<ItemStackAsStringSurrogate> = ItemStackAsStringSurrogate.serializer()
+
+    override fun encode(value: ItemStack): ItemStackAsStringSurrogate {
+        return ItemStackAsStringSurrogate(Registry.ITEM.getId(value.item), value.count, value.nbt)
+    }
+
+    override fun decode(value: ItemStackAsStringSurrogate): ItemStack {
+        return ItemStack(Registry.ITEM.get(value.id), value.count).apply {
+            nbt = value.tag
+        }
     }
 }

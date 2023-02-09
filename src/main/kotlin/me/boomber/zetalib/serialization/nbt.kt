@@ -1,67 +1,57 @@
 package me.boomber.zetalib.serialization
 
 import kotlinx.serialization.*
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.serialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import net.minecraft.nbt.*
+import net.minecraft.nbt.visitor.StringNbtWriter
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
 @Serializable
-@SerialName("NbtElement")
 sealed interface NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtString")
 class NbtStringSurrogate(val value: String) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtByte")
 class NbtByteSurrogate(val value: Byte) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtShort")
 class NbtShortSurrogate(val value: Short) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtInt")
 class NbtIntSurrogate(val value: Int) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtLong")
 class NbtLongSurrogate(val value: Long) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtFloat")
 class NbtFloatSurrogate(val value: Float) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtDouble")
 class NbtDoubleSurrogate(val value: Double) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtByteArray")
 class NbtByteArraySurrogate(val value: ByteArray) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtIntArray")
 class NbtIntArraySurrogate(val value: IntArray) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtLongArray")
 class NbtLongArraySurrogate(val value: LongArray) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtList")
 class NbtListSurrogate(val list: List<NbtElementSurrogate>) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtCompound")
 class NbtCompoundSurrogate(val entries: Map<String, NbtElementSurrogate>) : NbtElementSurrogate
 
 @Serializable
-@SerialName("NbtEnd")
 object NbtEndSurrogate : NbtElementSurrogate
 
 class KNbtElementSerializer : SurrogateSerializer<NbtElement, NbtElementSurrogate>() {
@@ -133,7 +123,7 @@ open class NbtSurrogateSerializer<A : NbtElement, B : NbtElementSurrogate>(name:
 
     private val delegate: KSerializer<NbtElement> = KNbtElementSerializer()
     @OptIn(ExperimentalSerializationApi::class)
-    override val descriptor: SerialDescriptor = SerialDescriptor(name, delegate.descriptor)
+    override val descriptor: SerialDescriptor = SerialDescriptor(name + "Surrogate", delegate.descriptor)
 
     override fun serialize(encoder: Encoder, value: A) {
         encoder.encodeSerializableValue(delegate, value)
@@ -142,5 +132,19 @@ open class NbtSurrogateSerializer<A : NbtElement, B : NbtElementSurrogate>(name:
     override fun deserialize(decoder: Decoder): A {
         val result = decoder.decodeSerializableValue(delegate)
         return klass.cast(result)
+    }
+}
+
+class NbtAsStringSerializer : KSerializer<NbtCompound> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("NbtAsString", PrimitiveKind.STRING)
+
+    override fun deserialize(decoder: Decoder): NbtCompound {
+        val content = decoder.decodeString()
+        return StringNbtReader.parse(content)
+    }
+
+    override fun serialize(encoder: Encoder, value: NbtCompound) {
+        val result = StringNbtWriter().apply(value)
+        encoder.encodeString(result)
     }
 }
