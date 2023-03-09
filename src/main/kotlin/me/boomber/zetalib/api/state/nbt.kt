@@ -30,12 +30,15 @@ inline fun <reified T : Entity> saveStateToNbt(entity: T, tag: NbtCompound, nbt:
 inline fun <reified T : Entity> loadStateFromNbt(entity: T, tag: NbtCompound, nbt: Nbt = defaultNbt) {
     findAnnotatedProperties(T::class, State::class)
         .forEach { prop ->
-            val serializer = nbt.serializersModule.serializer(prop.returnType)
-            val value = tag.decode(prop.name, serializer, nbt)
+            try {
+                val serializer = nbt.serializersModule.serializer(prop.returnType)
 
-            if (prop is KMutableProperty1<T, *>) {
-                prop.setter.call(entity, value)
-            }
+                val value = tag.decode(prop.name, serializer, nbt)
+
+                if (prop is KMutableProperty1<T, *>) {
+                    prop.setter.call(entity, value)
+                }
+            } catch (_: NullPointerException) { }
         }
 }
 
