@@ -5,7 +5,7 @@ import net.minecraft.entity.data.TrackedData
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class Tracked<T>(val dataTracker: DataTracker, val key: TrackedData<T>) : ReadWriteProperty<Any?, T> {
+class TrackedProperty<T>(private val dataTracker: DataTracker, private val key: TrackedData<T>) : ReadWriteProperty<Any?, T> {
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): T =
         dataTracker.get(key)
 

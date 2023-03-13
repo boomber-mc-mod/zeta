@@ -12,24 +12,13 @@
   "icon": "assets/zeta-lib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      {
-        "adapter": "kotlin",
-        "value": "me.boomber.zetalib.Zeta"
-      }
-    ],
-    "main": [
-      {
-        "adapter": "kotlin",
-        "value": "me.boomber.zetalib.Zeta"
-      }
-    ]
+    "client": [],
+    "main": []
   },
   "mixins": [
     "zeta-lib.mixins.json"
   ],
   "depends": {
-    "silk-core": "*",
     "fabric-language-kotlin": "*",
     "fabricloader": ">=0.14.9",
     "fabric": "*",
