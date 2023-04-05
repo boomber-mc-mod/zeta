@@ -3,10 +3,10 @@ package me.boomber.zetalib.client
 import kotlinx.serialization.Serializable
 import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Matrix3f
 import net.minecraft.util.math.Vec2f
-import net.minecraft.util.math.Vec3f
-import net.minecraft.util.math.Vector4f
+import org.joml.Matrix3f
+import org.joml.Vector4f
+import org.joml.Vector3f as Vec3f
 
 fun VertexConsumer.vertex(
     x: Float,
@@ -69,7 +69,7 @@ fun VertexConsumerProvider.build(
     color: Color,
     overlay: Int = OverlayTexture.DEFAULT_UV,
     light: Int = LightmapTextureManager.MAX_LIGHT_COORDINATE,
-    normal: Vec3f = Vec3f.POSITIVE_Y,
+    normal: Vec3f = Vec3f(0f, 1f, 0f),
     builder: VertexConsumerBuilder.() -> Unit
 ) = getBuffer(layer).build(transform, color, overlay, light, normal, builder)
 
@@ -78,7 +78,7 @@ fun VertexConsumer.build(
     color: Color,
     overlay: Int = OverlayTexture.DEFAULT_UV,
     light: Int = LightmapTextureManager.MAX_LIGHT_COORDINATE,
-    normal: Vec3f = Vec3f.POSITIVE_Y,
+    normal: Vec3f = Vec3f(0f, 1f, 0f),
     builder: VertexConsumerBuilder.() -> Unit
 ) = VertexConsumerBuilder(this, transform, color, normal, overlay, light).builder()
 
@@ -112,6 +112,6 @@ class VertexConsumerBuilder(
     }
 
     companion object {
-        val IDENTITY_NORMAL = Matrix3f().apply { loadIdentity() }
+        val IDENTITY_NORMAL = Matrix3f()
     }
 }

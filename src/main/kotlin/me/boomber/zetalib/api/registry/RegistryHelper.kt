@@ -1,6 +1,5 @@
 package me.boomber.zetalib.api.registry
 
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
@@ -9,6 +8,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
 import net.minecraft.client.render.entity.EntityRendererFactory
 import net.minecraft.enchantment.Enchantment
@@ -16,28 +16,29 @@ import net.minecraft.entity.*
 import net.minecraft.entity.attribute.DefaultAttributeContainer
 import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.item.Item
+import net.minecraft.registry.Registries
+import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
 fun <T : Entity> register(id: Identifier, entityType: EntityType<T>): EntityType<out T> =
-    Registry.register(Registry.ENTITY_TYPE, id, entityType)
+    Registry.register(Registries.ENTITY_TYPE, id, entityType)
 
 fun <T : Block> register(id: Identifier, block: T): T =
-    Registry.register(Registry.BLOCK, id, block)
+    Registry.register(Registries.BLOCK, id, block)
 
 fun <T : Item> register(id: Identifier, item: T): T =
-    Registry.register(Registry.ITEM, id, item)
+    Registry.register(Registries.ITEM, id, item)
 
 fun <T : BlockEntity> register(id: Identifier, blockEntity: BlockEntityType<T>): BlockEntityType<out T> =
-    Registry.register(Registry.BLOCK_ENTITY_TYPE, id, blockEntity)
+    Registry.register(Registries.BLOCK_ENTITY_TYPE, id, blockEntity)
 
 fun register(id: Identifier, status: StatusEffect): StatusEffect =
-    Registry.register(Registry.STATUS_EFFECT, id, status)
+    Registry.register(Registries.STATUS_EFFECT, id, status)
 
 fun register(id: Identifier, enchantment: Enchantment): Enchantment =
-    Registry.register(Registry.ENCHANTMENT, id, enchantment)
+    Registry.register(Registries.ENCHANTMENT, id, enchantment)
 
 fun <T : LivingEntity> register(type: EntityType<out T>, attribute: DefaultAttributeContainer.Builder) =
     FabricDefaultAttributeRegistry.register(type, attribute)
@@ -45,7 +46,7 @@ fun <T : LivingEntity> register(type: EntityType<out T>, attribute: DefaultAttri
 fun <T : Entity> register(type: EntityType<out T>, renderer: EntityRendererFactory<T>) =
     EntityRendererRegistry.register(type, renderer)
 fun <T : BlockEntity> register(type: BlockEntityType<out T>, renderer: BlockEntityRendererFactory<T>) =
-    BlockEntityRendererRegistry.register(type, renderer)
+    BlockEntityRendererFactories.register(type, renderer)
 
 fun <T : Entity> entityType(
     factory: (EntityType<out T>, World) -> T,

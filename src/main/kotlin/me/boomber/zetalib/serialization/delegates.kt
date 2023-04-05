@@ -3,10 +3,10 @@ package me.boomber.zetalib.serialization
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import net.minecraft.item.ItemStack
+import net.minecraft.registry.Registries
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.Vec3i
-import net.minecraft.util.registry.Registry
 
 @Serializable
 data class Vec3dSurrogate(val x: Double, val y: Double, val z: Double)
@@ -61,13 +61,13 @@ class ItemStackSerializer : SurrogateSerializer<ItemStack, ItemStackSurrogate>()
     override val delegate: KSerializer<ItemStackSurrogate> = ItemStackSurrogate.serializer()
 
     override fun decode(value: ItemStackSurrogate): ItemStack {
-        return ItemStack(Registry.ITEM.get(value.id), value.count).apply {
+        return ItemStack(Registries.ITEM.get(value.id), value.count).apply {
             nbt = value.tag
         }
     }
 
     override fun encode(value: ItemStack): ItemStackSurrogate {
-        return ItemStackSurrogate(Registry.ITEM.getId(value.item), value.count, value.nbt)
+        return ItemStackSurrogate(Registries.ITEM.getId(value.item), value.count, value.nbt)
     }
 }
 
@@ -78,11 +78,11 @@ class ItemStackAsStringSerializer : SurrogateSerializer<ItemStack, ItemStackAsSt
     override val delegate: KSerializer<ItemStackAsStringSurrogate> = ItemStackAsStringSurrogate.serializer()
 
     override fun encode(value: ItemStack): ItemStackAsStringSurrogate {
-        return ItemStackAsStringSurrogate(Registry.ITEM.getId(value.item), value.count, value.nbt)
+        return ItemStackAsStringSurrogate(Registries.ITEM.getId(value.item), value.count, value.nbt)
     }
 
     override fun decode(value: ItemStackAsStringSurrogate): ItemStack {
-        return ItemStack(Registry.ITEM.get(value.id), value.count).apply {
+        return ItemStack(Registries.ITEM.get(value.id), value.count).apply {
             nbt = value.tag
         }
     }

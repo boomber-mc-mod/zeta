@@ -2,17 +2,14 @@ package me.boomber.zetalib.client
 
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.gui.DrawableHelper
-import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
-import net.minecraft.util.math.Vec3f
-import net.minecraft.util.math.Vector4f
 import net.silkmc.silk.core.text.LiteralTextBuilder
 import net.silkmc.silk.core.text.literalText
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import org.joml.Vector3f as Vec3f
 
 /**
  * Build a list of vertices to draw a sphere at the origin.
@@ -143,13 +140,4 @@ enum class Alignment(val offset: Float) {
     LEFT(0.0f),
     CENTER(0.5f),
     RIGHT(1.0f);
-}
-
-fun ItemRenderer.draw(matrices: MatrixStack, itemStack: ItemStack) {
-    fun getTranslation(stack: MatrixStack) = Vector4f(0f, 0f, 0f, 1f)
-        .also { it.transform(stack.peek().positionMatrix) }
-        .let(::Vec3f)
-
-    val result = getTranslation(matrices)
-    renderGuiItemIcon(itemStack, result.x.toInt(), result.y.toInt())
 }

@@ -13,12 +13,12 @@ import net.minecraft.entity.passive.FrogVariant
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.particle.ParticleEffect
+import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.EulerAngle
 import net.minecraft.util.math.GlobalPos
-import net.minecraft.util.registry.RegistryEntry
 import net.minecraft.village.VillagerData
 import java.util.*
 

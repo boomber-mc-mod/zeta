@@ -5,10 +5,11 @@ import net.minecraft.client.model.ModelPartData
 import net.minecraft.client.model.ModelTransform
 import net.minecraft.client.render.VertexConsumer
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Matrix3f
-import net.minecraft.util.math.Matrix4f
-import net.minecraft.util.math.Quaternion
 import net.minecraft.util.math.Vec3d
+import org.joml.Quaternionf as Quaternion
+import org.joml.Matrix3f
+import org.joml.Matrix4f
+
 
 inline fun <T> MatrixStack.scope(crossinline block: MatrixStack.() -> T): T =
     try {
@@ -20,7 +21,7 @@ inline fun <T> MatrixStack.scope(crossinline block: MatrixStack.() -> T): T =
 
 fun MatrixStack.translate(vec: Vec3d) = translate(vec.x, vec.y, vec.z)
 fun MatrixStack.rotate(pitch: Double = 0.0, yaw: Double = 0.0, roll: Double = 0.0) =
-    multiply(Quaternion.fromEulerXyz(pitch.toFloat(), yaw.toFloat(), roll.toFloat()))
+    multiply(Quaternion().rotateXYZ(pitch.toFloat(), yaw.toFloat(), roll.toFloat()))
 
 fun MatrixStack.scale(scale: Double) = scale(scale.toFloat(), scale.toFloat(), scale.toFloat())
 
